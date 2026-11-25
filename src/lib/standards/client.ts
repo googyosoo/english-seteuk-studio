@@ -13,8 +13,9 @@ export function loadStandardsDb(): Promise<Map<string, StandardRecord[]>> {
   if (!cache) {
     cache = (async () => {
       const map = new Map<string, StandardRecord[]>();
+      const base = import.meta.env.BASE_URL || '/';
       for (const school of SCHOOLS) {
-        const res = await fetch(`/data/standards-${school}.json`);
+        const res = await fetch(`${base}data/standards-${school}.json`);
         if (!res.ok) throw new Error(`성취기준 데이터 로드 실패: ${school} (${res.status})`);
         const records: StandardRecord[] = await res.json();
         for (const r of records) {
@@ -31,7 +32,8 @@ export function loadStandardsDb(): Promise<Map<string, StandardRecord[]>> {
 
 export function loadStandardsIndex(): Promise<StandardsIndex> {
   if (!indexCache) {
-    indexCache = fetch('/data/standards-index.json').then((res) => {
+    const base = import.meta.env.BASE_URL || '/';
+    indexCache = fetch(`${base}data/standards-index.json`).then((res) => {
       if (!res.ok) throw new Error(`색인 로드 실패 (${res.status})`);
       return res.json();
     });
